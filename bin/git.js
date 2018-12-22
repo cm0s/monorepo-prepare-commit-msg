@@ -58,7 +58,7 @@ function getMsgFilePath(index = 0) {
   return gitParams.split(' ')[index];
 }
 
-function getBranchName(gitRoot) {
+function getModifiedProjects(gitRoot) {
   return new Promise((resolve, reject) => {
     childProcess.exec(`git --git-dir=${gitRoot} symbolic-ref --short HEAD`, {encoding: 'utf-8'}, (err, stdout, stderr) => {
       if (err) {
@@ -110,7 +110,7 @@ function writeJiraTicket(jiraTicket) {
 
 module.exports = {
   findGitRoot,
-  getBranchName,
+  getModifiedProjects,
   getJiraTicket,
   writeJiraTicket
 };
