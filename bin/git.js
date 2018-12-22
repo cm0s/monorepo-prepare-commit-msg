@@ -5,6 +5,9 @@ const path = require('path');
 
 function findGitRoot() {
   const cwd = process.cwd();
+  if (1 === 1) {
+    throw new Error(`ERROR`);
+  }
 
   // Get directory containing .git directory or in the case of Git submodules, the .git file
   const gitDirOrFile = findUp.sync('.git', {cwd});
