@@ -1,26 +1,35 @@
 {
-  "name": "jira-prepare-commit-msg",
-  "version": "1.0.3",
-  "description": "Husky Git hook to add JIRA ticket ID into the commit message",
-  "author": "Dmitry Shilov",
+  "name": "monorepo-prepare-commit-msg",
+  "version": "0.0.1",
+  "description": "Husky Git hook to add modified monorepo projects name into the commit message",
+  "author": {
+    "name": "Nicolas Forney",
+    "email": "nicolas@eforney.com"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/cm0s/monorepo-prepare-commit-msg/blob/master/LICENSE"
+    }
+  ],
   "bin": "./bin/index.js",
   "keywords": [
     "husky",
-    "jira",
     "hook",
     "hooks",
     "prepare",
     "commit",
     "message",
-    "msg"
+    "msg",
+    "monorepo",
+    "mono-repo"
   ],
-  "homepage": "https://github.com/bk201-/jira-prepare-commit-msg",
-  "bugs": "https://github.com/bk201-/jira-prepare-commit-msg/issues",
+  "homepage": "https://github.com/cm0s/monorepo-prepare-commit-msg",
+  "bugs": "https://github.com/cm0s/monorepo-prepare-commit-msg/issues",
   "repository": {
     "type": "git",
-    "url": "https://github.com/bk201-/jira-prepare-commit-msg"
+    "url": "https://github.com/cm0s/monorepo-prepare-commit-msg"
   },
-  "license": "MIT",
   "dependencies": {
     "find-up": "^3.0.0"
   },
