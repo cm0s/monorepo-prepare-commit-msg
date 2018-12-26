@@ -9,9 +9,9 @@ const log = message => {
 Promise.resolve()
   .then(() => log('start'))
   .then(() => git.findGitRoot())
-  .then(gitRoot => git.getModifiedProjects(gitRoot))
-  /*  .then(branch => git.getJiraTicket(branch))
-    .then(ticket => log(`The JIRA ticket ID is: ${ticket}`) || ticket)
+  .then(gitRoot => git.getModifiedFiles(gitRoot))
+   .then(modifiedFiles => git.getScopes(modifiedFiles))
+   /* .then(ticket => log(`The JIRA ticket ID is: ${ticket}`) || ticket)
     .then(ticket => git.writeJiraTicket(ticket))*/
   .catch(err => log(err.message || err))
   .then(() => log('done'));

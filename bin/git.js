@@ -5,9 +5,6 @@ const path = require('path');
 
 function findGitRoot() {
   const cwd = process.cwd();
-  if (1 === 1) {
-    throw new Error(`ERROR`);
-  }
 
   // Get directory containing .git directory or in the case of Git submodules, the .git file
   const gitDirOrFile = findUp.sync('.git', {cwd});
@@ -61,30 +58,48 @@ function getMsgFilePath(index = 0) {
   return gitParams.split(' ')[index];
 }
 
-function getModifiedProjects(gitRoot) {
+function getModifiedFiles(gitRoot) {
   return new Promise((resolve, reject) => {
-    childProcess.exec(`git --git-dir=${gitRoot} symbolic-ref --short HEAD`, {encoding: 'utf-8'}, (err, stdout, stderr) => {
+    childProcess.exec(`git --git-dir=${gitRoot} diff --cached --name-only`, {encoding: 'utf-8'}, (err, stdout, stderr) => {
       if (err) {
         return reject(err);
       }
       if (stderr) {
         return reject(new Error(String(stderr)));
       }
+      console.log('stdout3:' + stdout);
       resolve(String(stdout).trim());
     });
   });
 }
 
-function getJiraTicket(branchName) {
-  const jiraIdPattern = /([A-Z]+-\d+)/i;
-  const matched = branchName.match(jiraIdPattern);
-  const jiraTicket = matched && matched[0];
+function getScopes(modifiedFiles) {
+  const patterns = [
+    {regex: /web\/projects\/([^\s/]+)\/.*/, replace: '$1'},
+    {regex: /web\/([^\s/]+)$/, replace: '$1'},
+    {regex: /^([^\s/]+)\/[^\s/]+[^/]$/, replace: '$1'},
+    {regex: /^[^\s/]+\/([^\s/]+)\/.*/, replace: '$1'},
+    {regex: /(^[^/]+)$/, replace: 'root'}
+  ]
 
-  if (!jiraTicket) {
-    throw new Error(`The JIRA ticket ID not found`);
+  const modifiedFilesArray = modifiedFiles.split('\n');
+
+  const scopes = new Set();
+  for (const modifiedFile of modifiedFilesArray) {
+    for (const pattern of patterns) {
+      const matches = modifiedFile.match(pattern.regex);
+      if (matches) {
+        scopes.add(modifiedFile.replace(pattern.regex, pattern.replace));
+        break;
+      }
+    }
   }
 
-  return jiraTicket;
+  if (!scopes.size === 0) {
+    throw new Error(`No possible match, your regex must not be correctly set`);
+  }
+
+  return scopes;
 }
 
 function writeJiraTicket(jiraTicket) {
@@ -113,7 +128,7 @@ function writeJiraTicket(jiraTicket) {
 
 module.exports = {
   findGitRoot,
-  getModifiedProjects,
-  getJiraTicket,
+  getModifiedFiles,
+  getScopes,
   writeJiraTicket
 };
